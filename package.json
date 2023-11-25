@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firestore-export-import": "^1.4.0"
+    "firestore-export-import": "^1.4.0",
+    "node-fetch": "^2.7.0"
   }
 }
