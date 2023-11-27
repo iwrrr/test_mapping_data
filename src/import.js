@@ -34,6 +34,11 @@ const importToFirestore = async (jsonPath, collectionName) => {
     console.log(`Importing ${distinctData.length}`);
     for (let index = 0; index < distinctData.length; index++) {
       const element = distinctData[index];
+      element.createdAt = new admin.firestore.Timestamp(
+        element.createdAt._seconds,
+        element.createdAt._nanoseconds
+      );
+      // console.log("Datetime: ", element.createdAt);
       await collectionRef.add(element);
       // console.log(`Yuhuuuu~ import ${distinctData.length} success`);
     }

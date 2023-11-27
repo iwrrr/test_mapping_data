@@ -3,7 +3,21 @@ const fs = require("fs");
 const fu = require("./utils/file_utils");
 const path = require("path");
 const { getRegion } = require("./usecase/get_region");
+const moment = require("moment");
 const excel = require("./usecase/get_receipts_from_excel");
+const admin = require("firebase-admin");
+const serviceAccount = require("../serviceAccount.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "testfirestore-5d53a.firebaseapp.com",
+});
+
+function convertStringToDatetime(dateString) {
+  // Menggunakan moment untuk mengonversi string ke objek tanggal
+  const dateObject = moment(dateString, "YYYY-MM-DD HH:mm:ss").toDate();
+  return admin.firestore.Timestamp.fromDate(dateObject);
+}
 
 // Fungsi untuk mengunduh respons JSON dari URL dan menyimpannya ke dalam file di dalam folder
 const downloadJsonFromUrl = (url, folderPath) => {
@@ -38,7 +52,7 @@ const downloadJsonFromUrl = (url, folderPath) => {
       const targetJson = {
         catatan: "",
         ceritaLaporan: jsonData.koli_description,
-        createdAt: jsonData.created_at,
+        createdAt: convertStringToDatetime(jsonData.created_at),
         jabatanLokasiRelawan: "Kota/Kabupaten",
         kategori: "Tabloid",
         keteranganTambahanLaporan: jsonData.reason_delivery,
